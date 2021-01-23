@@ -42,7 +42,6 @@ class Mq:
         return self._queue_durable
 
     def write_bot_message(self, command, msg):
-
         logging.info("--------------------------------------")
         logging.info("Mensagem de solicitacao de execucao:")
         logging.info("--------------------------------------")

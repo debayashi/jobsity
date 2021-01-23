@@ -14,6 +14,7 @@ def on_connect():
 
 @sio.on('my_response', namespace='/test')
 def message(msg):
+    print(msg)
     if msg['data'].startswith("/"):
         bot = Bot()
         if re.search('^\/stock=', msg['data']):

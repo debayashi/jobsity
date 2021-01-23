@@ -4,7 +4,7 @@ import pika
 import json
 import logging
 import os
-from server.app import post_bot_message
+from server.app import socket_
 
 
 class Mq:
@@ -57,10 +57,20 @@ class Mq:
         print('Requeued %i messages' % requeued_messages)
         self.conn.close()
 
+    def post_bot_message(self, message):
+        print('entrou aqui')
+        socket_.emit(
+            'my_response',
+            {'data': message['msg'], 'user': 'chat_bot'},
+            namespace='/test'
+        )
+        print('=================================')
+        print(message)
+
     def _consume_bot_message(self, channel, method, properties, body):
         try:
             mq_properties = json.loads(body.decode('utf-8'))
-            post_bot_message(mq_properties)
+            self.post_bot_message(mq_properties)
             channel.basic_ack(method.delivery_tag)
         except Exception as err:
             print(err)

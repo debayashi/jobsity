@@ -2,58 +2,48 @@
 <html>
 <head>
     <title>Socket-Test</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
 
-            namespace = '/test';
-            var socket = io(namespace);
-
-            socket.on('connect', function() {
-                socket.emit('my_event', {data: 'connected to the SocketServer...'});
-            });
-            socket.on('bot_response', function(msg, cb) {
-                $('#log').append('<br>' + $('<div/>').text('logs #' + msg.count + ': ' + msg.data).html());
-                if (cb)
-                    cb();
-            });
-            socket.on('my_response', function(msg, cb) {
-                $('#log').append('<br>' + $('<div/>').text('logs #' + msg.count + ': ' + msg.data).html());
-                if (cb)
-                    cb();
-            });
-            $('form#emit').submit(function(event) {
-                socket.emit('my_event', {data: $('#emit_data').val()});
-                return false;
-            });
-            $('form#broadcast').submit(function(event) {
-                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
-                return false;
-            });
-            $('form#disconnect').submit(function(event) {
-                socket.emit('disconnect_request');
-                return false;
+            $('#login-socketio').click(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/session',
+                    data: JSON.stringify({user: $('#socketio-user-set').val(), session: '_' + Math.random().toString(36).substr(2, 9)}),
+                    contentType: 'application/json',
+                    success: function(result){
+                        window.location.href = '/chat';
+                    },
+                });
             });
         });
     </script>
 </head>
 <body style="background-color:white;">
 
-    <h1 style="background-color:white;">Socket</h1>
-    <form id="emit" method="POST" action='#'>
-        <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-        <input type="submit" value="Send Message">
-    </form>
-    <form id="broadcast" method="POST" action='#'>
-        <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-        <input type="submit" value="Send Broadcast Message">
-    </form>
-
-    <form id="disconnect" method="POST" action="#">
-        <input type="submit" value="Disconnect Server">
-    </form>
-    <h2 style="background-color:white;">Logs</h2>
-    <div id="log" ></div>
+    <div class="pure-g">
+        <div class="pure-u-1-4"></div>
+        <div class="pure-u-1-2">
+            <h1>Chat APP</h1>
+                <div id="socketio">
+                    <div class="pure-g">
+                        <div class="pure-u-1-6"><h3>User</h3></div>
+                        <div class="pure-u-5-6">
+                            <p>Current user: <b><span id="socketio-user"></span></b></p>
+                            <p>
+                                <input type=text id='socketio-user-set' placeholder="User to login...">
+                                <button class="pure-button pure-button-primary" id="login-socketio">Login</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pure-u-1-4"></div>
+    </div>
 </body>
 </html>
