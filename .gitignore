@@ -5,7 +5,9 @@ __pycache__/
 
 # C extensions
 *.so
-
+run.sh
+run_client.sh
+.vscode
 # Distribution / packaging
 .Python
 build/
