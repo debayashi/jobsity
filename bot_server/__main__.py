@@ -25,5 +25,5 @@ def disconnect():
     print('disconnected from server')
 
 
-sio.connect('http://localhost:5000', namespaces=['/test'])
+sio.connect('http://0.0.0.0:5000', namespaces=['/test'])
 sio.wait()

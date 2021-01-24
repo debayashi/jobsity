@@ -13,7 +13,7 @@ from server.models import ChatHistory
 from flask_bcrypt import Bcrypt
 from server.users.routes import User
 
-async_mode = 'threading'
+async_mode = 'eventlet'
 if async_mode == 'eventlet':
     import eventlet
     eventlet.monkey_patch()
@@ -102,4 +102,4 @@ def disconnect_request():
 
 
 def run_server():
-    socket_.run(app, debug=True)
+    socket_.run(app, host='0.0.0.0', debug=True)
