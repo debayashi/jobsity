@@ -4,8 +4,6 @@ from os import environ as env
 import logging
 
 
-
-
 class Mongodb:
     def __init__(self):
         mongo_url = env.get('MONGODB_URL')
@@ -22,7 +20,7 @@ class Mongodb:
                                 authSource=mongo_auth_source,
                                 authMechanism=mongo_auth_mecanism)
             self.db = client[mongo_db]
-    
+
         except errors.ServerSelectionTimeoutError:
             logging.error("Nao foi possivel conectar ao banco mongo")
             raise

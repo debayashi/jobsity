@@ -31,14 +31,19 @@
             <h1>Chat APP</h1>
                 <div id="socketio">
                     <div class="pure-g">
-                        <div class="pure-u-1-6"><h3>User</h3></div>
                         <div class="pure-u-5-6">
-                            <p>Current user: <b><span id="socketio-user"></span></b></p>
-                            <p>
-                                <input type=text id='socketio-user-set' placeholder="User to login...">
-                                <button class="pure-button pure-button-primary" id="login-socketio">Login</button>
-                            </p>
+                            <form id="login" method="POST" action='/login'>
+                                <input type="text" name="email" id="email" placeholder="Email">
+                                <input type="text" name="password" id="password" placeholder="Password">
+                                <input type="submit" value="login_user">
+                            </form>
                         </div>
+                            <form id="register" method="POST" action='/register'>
+                                <input type="text" name="name" id="name" placeholder="Name">
+                                <input type="text" name="email" id="email" placeholder="Email">
+                                <input type="text" name="password" id="password" placeholder="Password">
+                                <input type="submit" value="register">
+                            </form>
                     </div>
                 </div>
             </div>

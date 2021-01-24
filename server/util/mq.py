@@ -58,14 +58,11 @@ class Mq:
         self.conn.close()
 
     def post_bot_message(self, message):
-        print('entrou aqui')
         socket_.emit(
             'my_response',
             {'data': message['msg'], 'user': 'chat_bot'},
             namespace='/test'
         )
-        print('=================================')
-        print(message)
 
     def _consume_bot_message(self, channel, method, properties, body):
         try:

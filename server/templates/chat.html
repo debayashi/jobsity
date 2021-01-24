@@ -10,9 +10,6 @@
             namespace = '/test';
             var socket = io(namespace);
 
-            socket.on('connect', function() {
-                socket.emit('my_event', {data: 'connected to the SocketServer...'});
-            });
             socket.on('bot_response', function(msg, cb) {
                 console.log('bot response')
                 console.log(msg)
@@ -21,7 +18,7 @@
             socket.on('my_response', function(msg, cb) {
                 console.log('my_response')
                 console.log(msg)
-                $('#log').append('<br>' + $('<div/>').text(msg.user + ': ' + msg.data).html());
+                $('#log').append('<li>' + msg.user + ': ' + msg.data + '</li>');
                 if (cb)
                     cb();
             });
@@ -55,18 +52,18 @@
 </head>
 <body style="background-color:white;">
 
-    <h1 style="background-color:white;">Socket</h1>
-    <form id="emit" method="POST" action='#'>
-        <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-        <input type="submit" value="Send Message">
-    </form>
+    <h1 style="background-color:white;">Chat</h1>
     <form id="broadcast" method="POST" action='#'>
         <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-        <input type="submit" value="Send Broadcast Message">
+        <input type="submit" value="Send Message">
     </form>
 
     <button class="pure-button pure-button-primary" id="logout">Logout</button>
     <h2 style="background-color:white;">Logs</h2>
-    <div id="log" ></div>
+    <u1 id="log" >
+    {% for msg in messages %}
+        <li>{{msg.user}}: {{ msg.message}}</li>
+    {% endfor%}
+    </u1>
 </body>
 </html>
