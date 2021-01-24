@@ -1,6 +1,6 @@
 import requests
 import csv
-from client.util.mq import Mq
+from bot_server.util.mq import Mq
 
 
 class Bot:
@@ -19,4 +19,5 @@ class Bot:
         stock_data = self.get_stock(stock)
         mq = Mq()
         stock_msg = f'{stock_data[0]} quote is {stock_data[-2]} per share'
+        mq.write_bot_message('stock', stock_msg)
         mq.write_bot_message('stock', stock_msg)

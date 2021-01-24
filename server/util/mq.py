@@ -4,7 +4,6 @@ import pika
 import json
 import logging
 import os
-from server.app import socket_
 
 
 class Mq:
@@ -58,8 +57,9 @@ class Mq:
         self.conn.close()
 
     def post_bot_message(self, message):
+        from server.app import socket_
         socket_.emit(
-            'my_response',
+            'chat_message',
             {'data': message['msg'], 'user': 'chat_bot'},
             namespace='/test'
         )

@@ -1,6 +1,6 @@
 import socketio
 import re
-from client.bot import Bot
+from bot_server.bot import Bot
 
 
 sio = socketio.Client()
@@ -12,9 +12,8 @@ def on_connect():
     print('connected to server')
 
 
-@sio.on('my_response', namespace='/test')
+@sio.on('chat_message', namespace='/test')
 def message(msg):
-    print(msg)
     if msg['data'].startswith("/"):
         bot = Bot()
         if re.search('^\/stock=', msg['data']):

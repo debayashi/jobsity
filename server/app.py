@@ -9,11 +9,11 @@ from flask_login import (
 from flask_session import Session
 from server.users.routes import users
 from server.chat.routes import chat
-from server.service.chat_history import ChatHistory
+from server.models import ChatHistory
 from flask_bcrypt import Bcrypt
+from server.users.routes import User
 
-
-async_mode = 'gevent'
+async_mode = 'threading'
 if async_mode == 'eventlet':
     import eventlet
     eventlet.monkey_patch()
@@ -21,6 +21,23 @@ elif async_mode == 'gevent':
     from gevent import monkey
     monkey.patch_all()
 
+
+if async_mode is None:
+    try:
+        import eventlet
+        async_mode = 'eventlet'
+    except ImportError:
+        pass
+
+    if async_mode is None:
+        try:
+            from gevent import monkey
+            async_mode = 'gevent'
+        except ImportError:
+            pass
+
+    if async_mode is None:
+        async_mode = 'threading'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -31,12 +48,7 @@ login = LoginManager(app)
 Session(app)
 bcrypt = Bcrypt()
 bcrypt.init_app(app)
-socket_ = SocketIO(app, async_mode='gevent')
-
-
-class User(UserMixin, object):
-    def __init__(self, id=None):
-        self.id = id
+socket_ = SocketIO(app, async_mode=async_mode)
 
 
 @login.user_loader
@@ -44,21 +56,14 @@ def load_user(id):
     return User(id)
 
 
-@socket_.on('my_event', namespace='/test')
-def test_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
-
-
-@socket_.on('my_broadcast_event', namespace='/test')
+@socket_.on('chat_message', namespace='/test')
 def test_broadcast_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
 
-    chat_svc = ChatHistory()
-    chat_svc.save_message(message['data'], current_user.id, '/test')
-
-    emit('my_response',
+    if not message['data'].startswith('/'):
+        chat_svc = ChatHistory()
+        chat_svc.save_message(message['data'], current_user.id, '/test')
+    emit('chat_message',
          {'data': message['data'], 'user': current_user.id},
          broadcast=True)
 
@@ -91,7 +96,7 @@ def disconnect_request():
         disconnect()
 
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
+    emit('chat_message',
          {'data': 'Disconnected!', 'count': session['receive_count']},
          callback=can_disconnect)
 
