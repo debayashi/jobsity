@@ -43,7 +43,7 @@ export RABBITMQ_USER=user
 export RABBITMQ_PASSWORD=pass
 export RABBITMQ_HOST=localhost
 
-export SECRET_KbEY='secret!'
+export SECRET_KEY='secret!'
 
 python -m server
 ```
