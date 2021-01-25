@@ -83,19 +83,3 @@ class Mq:
             logging.exception(error)
         except Exception as err:
             logging.exception(err)
-
-    def _log_rejected(self, operation, motive):
-        logging.warning("--------------------------------------")
-        logging.warning("Nao foi possivel processar a mensagem.")
-        logging.warning("Operation rejeitada:")
-        logging.warning(operation)
-        logging.warning("Motivo:")
-        logging.warning(motive)
-        logging.warning("--------------------------------------")
-
-    def _log_ack(self, operation):
-        logging.info("--------------------------------------")
-        logging.info("Iniciando processamento da mensagem.")
-        logging.info("Operation:")
-        logging.info(operation)
-        logging.info("--------------------------------------")

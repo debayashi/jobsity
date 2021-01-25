@@ -22,7 +22,7 @@ class Mongodb:
             self.db = client[mongo_db]
 
         except errors.ServerSelectionTimeoutError:
-            logging.error("Nao foi possivel conectar ao banco mongo")
+            logging.error("Error connecting in database")
             raise
 
         self.objectid = ObjectId

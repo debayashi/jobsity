@@ -1,3 +1,4 @@
+import os
 from flask import (
     Flask, render_template, session, copy_current_request_context, request,
     jsonify
@@ -13,7 +14,7 @@ from server.models import ChatHistory
 from flask_bcrypt import Bcrypt
 from server.users.routes import User
 
-async_mode = 'eventlet'
+async_mode = 'threading'
 if async_mode == 'eventlet':
     import eventlet
     eventlet.monkey_patch()
@@ -40,7 +41,9 @@ if async_mode is None:
         async_mode = 'threading'
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+
+
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['SESSION_TYPE'] = 'filesystem'
 app.register_blueprint(chat)
 app.register_blueprint(users)
